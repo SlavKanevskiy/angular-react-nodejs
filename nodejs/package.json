@@ -1,0 +1,35 @@
+{
+  "name": "locations-api",
+  "version": "1.0.0",
+  "description": "REST API with Node.js, TypeScript and PostgreSQL",
+  "main": "src/server.ts",
+  "type": "module",
+  "prisma": {
+    "schema": "./database/schema.prisma"
+  },
+  "engines": {
+    "node": "22.14.0",
+    "yarn": "4.10.3"
+  },
+  "scripts": {
+    "start": "node --experimental-strip-types src/server.ts",
+    "dev": "node --watch --experimental-strip-types src/server.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@prisma/client": "^6.16.3",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "pg": "^8.11.3"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^22.14.0",
+    "@types/pg": "^8.10.9",
+    "prisma": "^6.16.3",
+    "typescript": "^5.3.3"
+  },
+  "packageManager": "yarn@4.10.3"
+}
