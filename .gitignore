@@ -7,6 +7,8 @@ node_modules/
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+package-lock.json
+yarn.lock
 
 # Production builds
 dist/
@@ -55,6 +57,7 @@ Desktop.ini
 # Angular
 .angular/
 .angular-cli.json
+.ng/
 
 # React
 .cache/
