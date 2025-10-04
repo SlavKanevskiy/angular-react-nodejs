@@ -1,14 +1,12 @@
-<mat-list-item class="location-item" matRipple (click)="onCardClick()">
-  <div class="location-item__content">
-    <div class="location-item__coordinates">
-      <span class="location-item__coord">{{ location().lat }}</span>
-      <span class="location-item__coord">{{ location().lon }}</span>
-    </div>
-
-    <div class="location-item__name">{{ location().name }}</div>
-
-    <button class="location-item__delete" mat-icon-button color="warn" (click)="onDelete($event)">
-      <mat-icon>delete</mat-icon>
-    </button>
+<div class="location-item" matRipple [style.height.px]="height()" (click)="onCardClick()">
+  <div class="location-item__coordinates">
+    <span class="location-item__coord">{{ location().lat }}</span>
+    <span class="location-item__coord">{{ location().lon }}</span>
   </div>
-</mat-list-item>
+
+  <div class="location-item__name">{{ location().name }}</div>
+
+  <button class="location-item__delete" mat-icon-button color="warn" (click)="onDelete($event)">
+    <mat-icon>delete</mat-icon>
+  </button>
+</div>

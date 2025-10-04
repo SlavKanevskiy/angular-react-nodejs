@@ -18,14 +18,14 @@ export function renderLocationsPage(locations: Location[]): string {
       </style>
     </head>
     <body>
-      <h1>📍 Locations в БД</h1>
+      <h1>📍 Locations Database</h1>
       <table>
         <thead>
           <tr>
             <th>ID</th>
-            <th>Название</th>
-            <th>Широта (lat)</th>
-            <th>Долгота (lon)</th>
+            <th>Name</th>
+            <th>Latitude</th>
+            <th>Longitude</th>
           </tr>
         </thead>
         <tbody>

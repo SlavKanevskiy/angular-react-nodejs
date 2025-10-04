@@ -1,5 +1,4 @@
 import { Component, input, output, ChangeDetectionStrategy } from '@angular/core';
-import { MatListModule } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatRippleModule } from '@angular/material/core';
@@ -7,13 +6,14 @@ import type { Location } from '../../../../shared/interfaces';
 
 @Component({
   selector: 'app-location-card',
-  imports: [MatListModule, MatButtonModule, MatIconModule, MatRippleModule],
+  imports: [MatButtonModule, MatIconModule, MatRippleModule],
   templateUrl: './location-card.component.html',
   styleUrl: './location-card.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LocationCardComponent {
   location = input.required<Location>();
+  height = input.required<number>();
   cardClick = output<Location>();
   delete = output<number>();
 

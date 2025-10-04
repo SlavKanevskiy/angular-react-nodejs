@@ -1,4 +1,5 @@
 <div class="locations-container">
+
   @if (loading()) {
     <div class="locations-container__loading">
       <mat-spinner></mat-spinner>
@@ -9,20 +10,27 @@
     <div class="locations-container__error">{{ error() }}</div>
   }
 
+  @if (!loading() && !error()) {
+    <mat-form-field class="locations-container__filter">
+      <mat-label>Search</mat-label>
+      <input matInput [value]="filterText()" (input)="onFilterChange($any($event.target).value)" placeholder="Name, latitude or longitude...">
+    </mat-form-field>
+  }
+
   @if (isEmpty()) {
     <p class="locations-container__empty">No locations found</p>
   }
 
   @if (hasLocations()) {
-    <mat-list class="locations-list">
-      @for (location of locations(); track location.id) {
-        <app-location-card
-          [location]="location"
-          (cardClick)="onCardClick($event)"
-          (delete)="onDeleteLocation($event)"
-        />
-      }
-    </mat-list>
+    <cdk-virtual-scroll-viewport itemSize="50" class="locations-list">
+      <app-location-card
+        *cdkVirtualFor="let location of filteredLocations()"
+        [location]="location"
+        [height]="50"
+        (cardClick)="onCardClick($event)"
+        (delete)="onDeleteLocation($event)"
+      />
+    </cdk-virtual-scroll-viewport>
   }
 
   <div class="locations-container__actions">
