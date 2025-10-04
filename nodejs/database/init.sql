@@ -1,7 +1,7 @@
--- Создание базы данных (выполнить вручную если нужно)
+-- Create database (run manually if needed)
 -- CREATE DATABASE locations_db;
 
--- Подключиться к locations_db и выполнить:
+-- Connect to locations_db and execute:
 
 CREATE TABLE IF NOT EXISTS locations (
   id SERIAL PRIMARY KEY,
@@ -10,10 +10,10 @@ CREATE TABLE IF NOT EXISTS locations (
   lon DECIMAL(11, 8) NOT NULL
 );
 
--- Тестовые данные
+-- Test data
 INSERT INTO locations (name, lat, lon) VALUES
-  ('Эйфелева башня', 48.85837009, 2.29447866),
-  ('Красная площадь', 55.75370903, 37.62091636),
-  ('Статуя Свободы', 40.68925095, -74.04449463);
+  ('Eiffel Tower', 48.85837009, 2.29447866),
+  ('Red Square', 55.75370903, 37.62091636),
+  ('Statue of Liberty', 40.68925095, -74.04449463);
 
 

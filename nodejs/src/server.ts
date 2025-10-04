@@ -1,31 +1,32 @@
 import express from 'express';
 import type { Request, Response } from 'express';
 import dotenv from 'dotenv';
-import locationsRouter from './routes/locations-prisma.ts';
-import pool from '../database/db.ts';
+import locationsRouter from './routes/locations.ts';
+import prisma from '../database/prisma.ts';
 import { renderLocationsPage } from './views/renderLocations.ts';
+import type { Location } from '../../shared/interfaces.ts';
 
 dotenv.config();
 
-const app = express();
-const PORT = process.env.PORT || 3000;
+const expressApp = express();
+const PORT: number = Number(process.env.PORT) || 3000;
 
-app.use(express.json());
+expressApp.use(express.json());
 
-app.use('/api/locations', locationsRouter);
+expressApp.use('/api/locations', locationsRouter);
 
-app.get('/', async (req: Request, res: Response) => {
+expressApp.get('/', async (req: Request, res: Response): Promise<void> => {
   try {
-    const result = await pool.query('SELECT * FROM locations');
-    const html = renderLocationsPage(result.rows);
+    const locations: Location[] = await prisma.location.findMany();
+    const html: string = renderLocationsPage(locations);
     res.send(html);
-  } catch (err) {
+  } catch (err: unknown) {
     console.error(err);
     res.status(500).send('Database error');
   }
 });
 
-app.listen(PORT, async () => {
+expressApp.listen(PORT, (): void => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
 

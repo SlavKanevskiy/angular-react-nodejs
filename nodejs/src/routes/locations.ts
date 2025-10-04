@@ -1,142 +1,138 @@
 import express from 'express';
 import type { Request, Response } from 'express';
-import pool from '../../database/db.ts';
+import prisma from '../../database/prisma.ts';
+import type { Location } from '../../../shared/interfaces.ts';
 
 const router = express.Router();
 
-interface Location {
-  id: number;
-  name: string;
-  lat: number;
-  lon: number;
-}
+type CreateLocation = Omit<Location, 'id'>;
 
-interface CreateLocationBody {
-  name: string;
-  lat: number;
-  lon: number;
-}
-
-// GET все геоточки
-router.get('/', async (req: Request, res: Response) => {
+// GET all locations
+router.get('/', async (req: Request, res: Response): Promise<void> => {
   try {
-    const result = await pool.query<Location>('SELECT * FROM locations ORDER BY id ASC');
-    res.json(result.rows);
-  } catch (err) {
+    const locations: Location[] = await prisma.location.findMany({
+      orderBy: { id: 'asc' }
+    });
+    res.json(locations);
+  } catch (err: unknown) {
     console.error(err);
     res.status(500).json({ error: 'Database error' });
   }
 });
 
-// GET одну точку по ID
-router.get('/:id', async (req: Request, res: Response) => {
+// GET single location by ID
+router.get('/:id', async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
-    const result = await pool.query<Location>('SELECT * FROM locations WHERE id = $1', [id]);
+    const location: Location | null = await prisma.location.findUnique({
+      where: { id: parseInt(id, 10) }
+    });
 
-    if (result.rows.length === 0) {
-      return res.status(404).json({ error: 'Location not found' });
+    if (!location) {
+      res.status(404).json({ error: 'Location not found' });
+      return;
     }
 
-    res.json(result.rows[0]);
-  } catch (err) {
+    res.json(location);
+  } catch (err: unknown) {
     console.error(err);
     res.status(500).json({ error: 'Database error' });
   }
 });
 
-// POST создать точку
-router.post('/', async (req: Request<{}, {}, CreateLocationBody>, res: Response) => {
+// POST create new location
+router.post('/', async (req: Request<{}, {}, CreateLocation>, res: Response): Promise<void> => {
   try {
     const { name, lat, lon } = req.body;
 
     if (!name || lat === undefined || lon === undefined) {
-      return res.status(400).json({ error: 'Name, lat and lon are required' });
+      res.status(400).json({ error: 'Name, lat and lon are required' });
+      return;
     }
 
-    // Валидация координат
+    // Validate coordinates
     if (lat < -90 || lat > 90) {
-      return res.status(400).json({ error: 'Lat must be between -90 and 90' });
+      res.status(400).json({ error: 'Lat must be between -90 and 90' });
+      return;
     }
     if (lon < -180 || lon > 180) {
-      return res.status(400).json({ error: 'Lon must be between -180 and 180' });
+      res.status(400).json({ error: 'Lon must be between -180 and 180' });
+      return;
     }
 
-    const result = await pool.query<Location>(
-      'INSERT INTO locations (name, lat, lon) VALUES ($1, $2, $3) RETURNING *',
-      [name, lat, lon]
-    );
+    const location: Location = await prisma.location.create({
+      data: { name, lat, lon }
+    });
 
-    res.status(201).json(result.rows[0]);
-  } catch (err) {
+    res.status(201).json(location);
+  } catch (err: unknown) {
     console.error(err);
     res.status(500).json({ error: 'Database error' });
   }
 });
 
-// POST генерировать n случайных точек
-router.post('/generate', async (req: Request<{}, {}, { n: number }>, res: Response) => {
+// POST generate n random locations
+router.post('/generate', async (req: Request<{}, {}, { n: number }>, res: Response): Promise<void> => {
   try {
     const { n } = req.body;
 
-    if (!n || n <= 0 || n > 1000) {
-      return res.status(400).json({ error: 'n must be between 1 and 1000' });
+    if (!n || n <= 0 || n > 10000) {
+      res.status(400).json({ error: 'n must be between 1 and 10000' });
+      return;
     }
 
     const startTime = Date.now();
 
-    // Генерируем данные
-    const values: any[] = [];
-    const placeholders: string[] = [];
-
+    // Generate random location data
+    const data: CreateLocation[] = [];
     for (let i = 0; i < n; i++) {
       const lat = Math.random() * 180 - 90;
       const lon = Math.random() * 360 - 180;
-      const name = `Random Location ${Math.round(lat)}-${Math.round(lon)}`;
-
-      values.push(name, lat, lon);
-      placeholders.push(`($${i * 3 + 1}, $${i * 3 + 2}, $${i * 3 + 3})`);
+      const name = `Random Location ${Math.round(lat)} ${Math.round(lon)}`;
+      data.push({ name, lat, lon });
     }
 
-    // Один массовый INSERT
-    const query = `INSERT INTO locations (name, lat, lon) VALUES ${placeholders.join(', ')} RETURNING *`;
-    const result = await pool.query<Location>(query, values);
+    // Bulk insert
+    await prisma.location.createMany({ data });
 
     const endTime = Date.now();
     const duration = endTime - startTime;
 
-    console.log(`✨ Сгенерировано ${n} точек за ${duration}ms (${(duration / 1000).toFixed(2)}s)`);
+    console.log(`✨ Generated ${n} locations in ${duration}ms (${(duration / 1000).toFixed(2)}s)`);
 
-    res.status(201).json({ created: n, locations: result.rows });
-  } catch (err) {
+    res.status(201).json({ created: n });
+  } catch (err: unknown) {
     console.error(err);
     res.status(500).json({ error: 'Database error' });
   }
 });
 
-// DELETE удалить все точки
-router.delete('/', async (req: Request, res: Response) => {
+// DELETE all locations
+router.delete('/', async (req: Request, res: Response): Promise<void> => {
   try {
-    const result = await pool.query<Location>('DELETE FROM locations RETURNING *');
-    res.json({ message: 'All locations deleted', count: result.rows.length, deleted: result.rows });
-  } catch (err) {
+    const result = await prisma.location.deleteMany();
+    res.json({ message: 'All locations deleted', count: result.count });
+  } catch (err: unknown) {
     console.error(err);
     res.status(500).json({ error: 'Database error' });
   }
 });
 
-// DELETE удалить точку
-router.delete('/:id', async (req: Request, res: Response) => {
+// DELETE single location by ID
+router.delete('/:id', async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
-    const result = await pool.query<Location>('DELETE FROM locations WHERE id = $1 RETURNING *', [id]);
 
-    if (result.rows.length === 0) {
-      return res.status(404).json({ error: 'Location not found' });
+    const location: Location = await prisma.location.delete({
+      where: { id: parseInt(id, 10) }
+    });
+
+    res.json({ message: 'Location deleted', location });
+  } catch (err: unknown) {
+    if (err instanceof Error && 'code' in err && err.code === 'P2025') {
+      res.status(404).json({ error: 'Location not found' });
+      return;
     }
-
-    res.json({ message: 'Location deleted', location: result.rows[0] });
-  } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Database error' });
   }

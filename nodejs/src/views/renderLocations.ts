@@ -1,9 +1,4 @@
-interface Location {
-  id: number;
-  name: string;
-  lat: number;
-  lon: number;
-}
+import type { Location } from '../../../shared/interfaces.ts';
 
 export function renderLocationsPage(locations: Location[]): string {
   return `
