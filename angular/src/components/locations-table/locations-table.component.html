@@ -1,39 +1,42 @@
 <div class="locations-container">
-  <h1>📍 Locations Database</h1>
-
   @if (loading()) {
-    <div class="loading">Loading...</div>
+    <div class="locations-container__loading">
+      <mat-spinner></mat-spinner>
+    </div>
   }
 
   @if (error()) {
-    <div class="error">{{ error() }}</div>
+    <div class="locations-container__error">{{ error() }}</div>
   }
 
-  @if (!loading() && !error()) {
-    <table>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Name</th>
-          <th>Latitude (lat)</th>
-          <th>Longitude (lon)</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (location of locations(); track location.id) {
-          <tr>
-            <td>{{ location.id }}</td>
-            <td>{{ location.name }}</td>
-            <td>{{ location.lat }}</td>
-            <td>{{ location.lon }}</td>
-          </tr>
-        }
-      </tbody>
-    </table>
-
-    @if (locations().length === 0) {
-      <p class="empty">No locations found</p>
-    }
+  @if (isEmpty()) {
+    <p class="locations-container__empty">No locations found</p>
   }
+
+  @if (hasLocations()) {
+    <mat-list class="locations-list">
+      @for (location of locations(); track location.id) {
+        <app-location-card
+          [location]="location"
+          (cardClick)="onCardClick($event)"
+          (delete)="onDeleteLocation($event)"
+        />
+      }
+    </mat-list>
+  }
+
+  <div class="locations-container__actions">
+    <button mat-raised-button color="primary" (click)="generateLocations(10)">
+      +10
+    </button>
+    <button mat-raised-button color="primary" (click)="generateLocations(100)">
+      +100
+    </button>
+    <button mat-raised-button color="primary" (click)="generateLocations(1000)">
+      +1000
+    </button>
+    <button mat-raised-button color="warn" (click)="clearAll()">
+      Clear all
+    </button>
+  </div>
 </div>
-

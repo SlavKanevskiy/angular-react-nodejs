@@ -88,7 +88,7 @@ router.post('/generate', async (req: Request<{}, {}, { n: number }>, res: Respon
     for (let i = 0; i < n; i++) {
       const lat = Math.random() * 180 - 90;
       const lon = Math.random() * 360 - 180;
-      const name = `Random Location ${Math.round(lat)} ${Math.round(lon)}`;
+      const name = `Random Location ${lat.toFixed(0)} ${lon.toFixed(0)}`;
       data.push({ name, lat, lon });
     }
 

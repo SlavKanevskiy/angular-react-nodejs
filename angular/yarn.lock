@@ -291,6 +291,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@angular/cdk@npm:^20.2.7":
+  version: 20.2.7
+  resolution: "@angular/cdk@npm:20.2.7"
+  dependencies:
+    parse5: "npm:^8.0.0"
+    tslib: "npm:^2.3.0"
+  peerDependencies:
+    "@angular/common": ^20.0.0 || ^21.0.0
+    "@angular/core": ^20.0.0 || ^21.0.0
+    rxjs: ^6.5.3 || ^7.4.0
+  checksum: 10c0/4bda83f35d19a2a64073570637d08e22f41573c1eb8bdcb64ffdbdd1a29b9875ac0af72aab2e132088c31a3f76d815e743983bff090733401d67ed32fc825ac0
+  languageName: node
+  linkType: hard
+
 "@angular/cli@npm:^20.3.4":
   version: 20.3.4
   resolution: "@angular/cli@npm:20.3.4"
@@ -394,6 +408,22 @@ __metadata:
     "@angular/platform-browser": 20.3.3
     rxjs: ^6.5.3 || ^7.4.0
   checksum: 10c0/06b845e8e0799ebe81488ae48a0fa950e9e0b7d694578b9e4e47f4a1cfe042dde3a70228564d59dcf7c0f6b4deaee2ca240faad4f1694e8ed4abc61bb8b3ea1e
+  languageName: node
+  linkType: hard
+
+"@angular/material@npm:^20.2.7":
+  version: 20.2.7
+  resolution: "@angular/material@npm:20.2.7"
+  dependencies:
+    tslib: "npm:^2.3.0"
+  peerDependencies:
+    "@angular/cdk": 20.2.7
+    "@angular/common": ^20.0.0 || ^21.0.0
+    "@angular/core": ^20.0.0 || ^21.0.0
+    "@angular/forms": ^20.0.0 || ^21.0.0
+    "@angular/platform-browser": ^20.0.0 || ^21.0.0
+    rxjs: ^6.5.3 || ^7.4.0
+  checksum: 10c0/74aef2872160d7d863bd156ad494d0ee1fbe557d2ff640036db52db6bb4749e25f8808931be6aeabbe694f9a22d375341d30134ac78961b4cd43c32a9975857b
   languageName: node
   linkType: hard
 
@@ -2464,12 +2494,14 @@ __metadata:
   resolution: "angular@workspace:."
   dependencies:
     "@angular/build": "npm:^20.3.4"
+    "@angular/cdk": "npm:^20.2.7"
     "@angular/cli": "npm:^20.3.4"
     "@angular/common": "npm:^20.3.0"
     "@angular/compiler": "npm:^20.3.0"
     "@angular/compiler-cli": "npm:^20.3.0"
     "@angular/core": "npm:^20.3.0"
     "@angular/forms": "npm:^20.3.0"
+    "@angular/material": "npm:^20.2.7"
     "@angular/platform-browser": "npm:^20.3.0"
     "@types/jasmine": "npm:~5.1.0"
     "@types/node": "npm:^20.17.19"
