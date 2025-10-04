@@ -19,37 +19,36 @@ export const initialState: LocationsState = {
 export const locationsReducer = createReducer(
   initialState,
 
+  // Initial load
   on(LocationsActions.loadLocations, (state) => ({
     ...state,
     loading: true,
     error: null
   })),
-
   on(LocationsActions.loadLocationsSuccess, (state, { locations }) => ({
     ...state,
     locations,
     loading: false
   })),
-
   on(LocationsActions.loadLocationsFailure, (state, { error }) => ({
     ...state,
     loading: false,
     error
   })),
 
-  on(LocationsActions.deleteLocationSuccess, (state, { id }) => ({
+  // WebSocket events
+  on(LocationsActions.wsLocationsCreated, (state, { locations }) => ({
     ...state,
-    locations: state.locations.filter(loc => loc.id !== id)
+    locations: [...state.locations, ...locations]
+  })),
+  on(LocationsActions.wsLocationDeleted, (state, { id }) => ({
+    ...state,
+    locations: id ? state.locations.filter(loc => loc.id !== id) : []
   })),
 
-  on(LocationsActions.clearAllLocationsSuccess, (state) => ({
-    ...state,
-    locations: []
-  })),
-
+  // Filter
   on(LocationsActions.setFilterText, (state, { filterText }) => ({
     ...state,
     filterText
   }))
 );
-

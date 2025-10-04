@@ -1,15 +1,16 @@
 import express from 'express';
 import type { Request, Response } from 'express';
-import dotenv from 'dotenv';
+import { createServer } from 'http';
 import locationsRouter from './routes/locations.ts';
 import prisma from '../database/prisma.ts';
 import { renderLocationsPage } from './views/renderLocations.ts';
+import { setupWebSocket } from './websocket.ts';
 import type { Location } from '../../shared/interfaces.ts';
-
-dotenv.config();
+import { config } from '../../shared/config.ts';
 
 const expressApp = express();
-const PORT: number = Number(process.env.PORT) || 3000;
+const httpServer = createServer(expressApp);
+const PORT: number = config.port;
 
 // Enable CORS for Angular
 expressApp.use((req, res, next) => {
@@ -37,7 +38,10 @@ expressApp.get('/', async (req: Request, res: Response): Promise<void> => {
   }
 });
 
-expressApp.listen(PORT, (): void => {
+setupWebSocket(httpServer);
+
+httpServer.listen(PORT, (): void => {
   console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`WebSocket server ready`);
 });
 

@@ -1,7 +1,9 @@
 import express from 'express';
 import type { Request, Response } from 'express';
 import prisma from '../../database/prisma.ts';
+import { getIO } from '../websocket.ts';
 import type { Location } from '../../../shared/interfaces.ts';
+import { WS_EVENTS } from '../../../shared/actions.ts';
 
 const router = express.Router();
 
@@ -64,7 +66,9 @@ router.post('/', async (req: Request<{}, {}, CreateLocation>, res: Response): Pr
       data: { name, lat, lon }
     });
 
-    res.status(201).json(location);
+    getIO().emit(WS_EVENTS.LOCATIONS_CREATED, [location]);
+
+    res.status(201).json([location]);
   } catch (err: unknown) {
     console.error(err);
     res.status(500).json({ error: 'Database error' });
@@ -92,15 +96,17 @@ router.post('/generate', async (req: Request<{}, {}, { n: number }>, res: Respon
       data.push({ name, lat, lon });
     }
 
-    // Bulk insert
-    await prisma.location.createMany({ data });
+    // Bulk insert and return all created locations
+    const locations: Location[] = await prisma.location.createManyAndReturn({ data });
 
     const endTime = Date.now();
     const duration = endTime - startTime;
 
     console.log(`✨ Generated ${n} locations in ${duration}ms (${(duration / 1000).toFixed(2)}s)`);
 
-    res.status(201).json({ created: n });
+    getIO().emit(WS_EVENTS.LOCATIONS_CREATED, locations);
+
+    res.status(201).json(locations);
   } catch (err: unknown) {
     console.error(err);
     res.status(500).json({ error: 'Database error' });
@@ -111,6 +117,9 @@ router.post('/generate', async (req: Request<{}, {}, { n: number }>, res: Respon
 router.delete('/', async (req: Request, res: Response): Promise<void> => {
   try {
     const result = await prisma.location.deleteMany();
+
+    getIO().emit(WS_EVENTS.LOCATION_DELETED, {});
+
     res.json({ message: 'All locations deleted', count: result.count });
   } catch (err: unknown) {
     console.error(err);
@@ -126,6 +135,8 @@ router.delete('/:id', async (req: Request, res: Response): Promise<void> => {
     const location: Location = await prisma.location.delete({
       where: { id: parseInt(id, 10) }
     });
+
+    getIO().emit(WS_EVENTS.LOCATION_DELETED, { id: parseInt(id, 10) });
 
     res.json({ message: 'Location deleted', location });
   } catch (err: unknown) {
