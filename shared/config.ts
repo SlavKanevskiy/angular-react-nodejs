@@ -1,5 +1,10 @@
 export const config = {
-  port: 3000,
+  ports: {
+    backend: 3000,
+    frontend: 4200,
+    postgres: 5432
+  },
+
   baseUrl: 'http://localhost:3000',
 
   api: {

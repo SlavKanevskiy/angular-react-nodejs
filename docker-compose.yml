@@ -1,0 +1,56 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: locations_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: locations_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./nodejs/database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./nodejs
+      dockerfile: Dockerfile
+    container_name: locations_backend
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/locations_db
+    volumes:
+      - ./nodejs/src:/app/src
+      - ./shared:/app/../shared
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: yarn dev
+
+  frontend:
+    build:
+      context: ./angular
+      dockerfile: Dockerfile
+    container_name: locations_frontend
+    restart: always
+    ports:
+      - "4200:4200"
+    volumes:
+      - ./angular/src:/app/src
+      - ./shared:/app/../shared
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
+
