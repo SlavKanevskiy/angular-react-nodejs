@@ -1,4 +1,5 @@
-import { bootstrapApplication } from '@angular/platform-browser';
+import { createCustomElement } from '@angular/elements';
+import { createApplication } from '@angular/platform-browser';
 import { LocationsTableComponent } from './components/locations-table/locations-table.component';
 import { ApplicationConfig, provideZonelessChangeDetection } from '@angular/core';
 import { provideHttpClient } from '@angular/common/http';
@@ -16,5 +17,11 @@ export const mainAppConfig: ApplicationConfig = {
   ]
 };
 
-bootstrapApplication(LocationsTableComponent, mainAppConfig)
-  .catch((err) => console.error(err));
+(async () => {
+  const app = await createApplication(mainAppConfig);
+  const element = createCustomElement(LocationsTableComponent, {
+    injector: app.injector
+  });
+
+  customElements.define('angular-locations-table', element);
+})();
