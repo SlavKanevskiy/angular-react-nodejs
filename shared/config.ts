@@ -5,7 +5,7 @@ export const config = {
     postgres: 5432
   },
 
-  baseUrl: 'http://localhost:3000',
+  baseUrl: typeof window !== 'undefined' && window.location.port === '8080' ? '' : 'http://localhost:3000',
 
   api: {
     locations: '/api/locations',

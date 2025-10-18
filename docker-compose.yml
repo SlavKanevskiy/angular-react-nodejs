@@ -37,17 +37,14 @@ services:
         condition: service_healthy
     command: yarn dev
 
-  frontend:
+  shell:
     build:
-      context: ./angular
-      dockerfile: Dockerfile
-    container_name: locations_frontend
+      context: .
+      dockerfile: shell/Dockerfile
+    container_name: locations_shell
     restart: always
     ports:
-      - "4200:4200"
-    volumes:
-      - ./angular/src:/app/src
-      - ./shared:/app/../shared
+      - "8080:8080"
     depends_on:
       - backend
 

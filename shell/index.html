@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Micro Frontend - Angular + React</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    header {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 12px;
+      padding: 20px 30px;
+      margin-bottom: 30px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      color: #333;
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      color: #666;
+      font-size: 1rem;
+    }
+
+    nav {
+      display: flex;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    button {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    button.angular {
+      background: linear-gradient(135deg, #dd0031 0%, #c3002f 100%);
+      color: white;
+    }
+
+    button.react {
+      background: linear-gradient(135deg, #61dafb 0%, #21a1c4 100%);
+      color: #282c34;
+    }
+
+    button.both {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    button.active {
+      transform: scale(0.98);
+      box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .apps-container {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .app-wrapper {
+      flex: 1;
+      min-width: 300px;
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      display: none;
+    }
+
+    .app-wrapper.visible {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .app-label {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #eee;
+    }
+
+    .app-label.angular {
+      color: #dd0031;
+    }
+
+    .app-label.react {
+      color: #61dafb;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🚀 Micro Frontend Application</h1>
+      <p class="subtitle">Angular 20 + React 19 Web Components (Production Build)</p>
+      <nav>
+        <button class="angular" onclick="showApp('angular')">Show Angular</button>
+        <button class="react" onclick="showApp('react')">Show React</button>
+        <button class="both" onclick="showApp('both')">Show Both</button>
+      </nav>
+    </header>
+
+    <div class="apps-container">
+      <div id="angular-container" class="app-wrapper">
+        <div class="app-label angular">📐 Angular Locations App</div>
+        <angular-locations-table></angular-locations-table>
+      </div>
+
+      <div id="react-container" class="app-wrapper">
+        <div class="app-label react">⚛️ React Locations App</div>
+        <react-locations-app></react-locations-app>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function showApp(app) {
+      const angularContainer = document.getElementById('angular-container');
+      const reactContainer = document.getElementById('react-container');
+
+      angularContainer.classList.remove('visible');
+      reactContainer.classList.remove('visible');
+
+      if (app === 'angular') {
+        angularContainer.classList.add('visible');
+        angularContainer.style.flex = '1 1 100%';
+      } else if (app === 'react') {
+        reactContainer.classList.add('visible');
+        reactContainer.style.flex = '1 1 100%';
+      } else {
+        angularContainer.classList.add('visible');
+        reactContainer.classList.add('visible');
+        angularContainer.style.flex = '1';
+        reactContainer.style.flex = '1';
+      }
+    }
+
+    // Show both by default
+    showApp('both');
+  </script>
+
+  <!-- Load Angular Styles -->
+  <link rel="stylesheet" href="/angular/styles.css">
+
+  <!-- Load React Styles -->
+  <link rel="stylesheet" href="/react/react-app.css">
+
+  <!-- Load Angular Web Component -->
+  <script type="module" src="/angular/main.js"></script>
+
+  <!-- Load React Web Component -->
+  <script type="module" src="/react/react-app.js"></script>
+</body>
+</html>
