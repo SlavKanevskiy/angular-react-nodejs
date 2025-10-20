@@ -1,35 +1,58 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useEffect, useRef, useState } from 'react'
+import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
+import MarkerClusterGroup from 'react-leaflet-cluster'
+import { apiUrl} from '../../shared/config'
+import type { Location } from '../../shared/interfaces'
+import 'leaflet/dist/leaflet.css'
 import './App.css'
 
+const fetchLocations = async () => {
+  const response = await fetch(apiUrl.locations);
+  return response.json();
+};
+
+const deleteLocation = async (id: number) => {
+  const response = await fetch(`${apiUrl.locations}/${id}`, {
+    method: 'DELETE',
+  });
+  return response.json();
+};
+
 function App() {
-  const [count, setCount] = useState(0)
+  const [locations, setLocations] = useState<Location[]>([]);
+  const initialized = useRef(false);
+
+  useEffect(() => {
+    if (initialized.current) return;
+    initialized.current = true;
+
+    // Загружаем локации
+    fetchLocations().then(setLocations);
+  }, []);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div className="map-container">
+      <MapContainer
+        center={[0, 0]}
+        zoom={1}
+        className="map"
+      >
+        <TileLayer
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        <MarkerClusterGroup>
+          {locations.map((location, index) => (
+            <Marker key={index} position={[location.lat, location.lon]}>
+              <Popup>
+                <div>{location.name}</div>
+                <button onClick={() => deleteLocation(location.id)}>delete</button>
+              </Popup>
+            </Marker>
+          ))}
+        </MarkerClusterGroup>
+      </MapContainer>
+    </div>
+  );
 }
 
 export default App
