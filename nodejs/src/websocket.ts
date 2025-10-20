@@ -6,7 +6,7 @@ let io: Server;
 export function setupWebSocket(server: HttpServer) {
   io = new Server(server, {
     cors: {
-      origin: 'http://localhost:4200',
+      origin: '*',
       methods: ['GET', 'POST', 'DELETE']
     }
   });

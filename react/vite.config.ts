@@ -8,16 +8,13 @@ export default defineConfig({
     'process.env': '{}'
   },
   build: {
-    lib: {
-      entry: 'src/main.tsx',
-      name: 'ReactLocationsApp',
-      fileName: 'react-app',
-      formats: ['es']
-    },
+    outDir: 'dist',
     rollupOptions: {
       input: 'src/main.tsx',
       output: {
-        inlineDynamicImports: true
+        entryFileNames: 'react-app.js',
+        chunkFileNames: 'react-app.js',
+        assetFileNames: 'react-app.[ext]'
       }
     }
   },

@@ -13,21 +13,21 @@ export class WebsocketService {
       this.socket = io(url);
 
       this.socket.on('connect', () => {
-        console.log('✅ WebSocket connected:', this.socket?.id);
+        console.log('Angular WebSocket connected:', this.socket?.id);
       });
 
       this.socket.on(WS_EVENTS.LOCATIONS_CREATED, (locations: Location[]) => {
-        console.log('WebSocket Locations created');
+        console.log('Angular', WS_EVENTS.LOCATIONS_CREATED);
         observer.next({ type: WS_EVENTS.LOCATIONS_CREATED, data: locations });
       });
 
       this.socket.on(WS_EVENTS.LOCATION_DELETED, (data: { id?: number }) => {
-        console.log('WebSocket Location deleted');
+        console.log('Angular', WS_EVENTS.LOCATION_DELETED);
         observer.next({ type: WS_EVENTS.LOCATION_DELETED, data });
       });
 
       this.socket.on('disconnect', () => {
-        console.log('❌ WebSocket disconnected');
+        console.log('Angular WebSocket disconnected');
       });
 
       return () => {
