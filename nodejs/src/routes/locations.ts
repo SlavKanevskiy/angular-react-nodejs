@@ -149,5 +149,24 @@ router.delete('/:id', async (req: Request, res: Response): Promise<void> => {
   }
 });
 
+// POST select location
+router.post('/select', async (req: Request<{}, {}, { id: number }>, res: Response): Promise<void> => {
+  try {
+    const { id } = req.body;
+
+    if (!id) {
+      res.status(400).json({ error: 'Location ID is required' });
+      return;
+    }
+
+    getIO().emit(WS_EVENTS.LOCATION_SELECTED, { id });
+
+    res.status(200).json({ message: 'selected' });
+  } catch (err: unknown) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
 export default router;
 

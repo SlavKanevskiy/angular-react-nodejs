@@ -45,7 +45,7 @@ export class LocationsTableComponent implements OnInit {
   }
 
   onCardClick(location: Location): void {
-    console.log('Location clicked:', location);
+    this.store.dispatch(LocationsActions.selectLocation({ id: location.id }));
   }
 
   onDeleteLocation(id: number): void {

@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, useRef } from 'react'
 import { MapContainer, Marker, Tooltip, TileLayer, useMapEvents } from 'react-leaflet'
 import MarkerClusterGroup from 'react-leaflet-cluster'
 import type { Location } from '../../shared/interfaces'
@@ -23,7 +23,7 @@ function MapClickHandler() {
     click: (e) => {
       const { lat, lng } = e.latlng;
       apiService.createLocation({
-        name: `Click location ${lat.toFixed(0)}, ${lng.toFixed(0)}`,
+        name: `Created location ${lat.toFixed(0)}, ${lng.toFixed(0)}`,
         lat: lat,
         lon: lng
       });
@@ -34,6 +34,7 @@ function MapClickHandler() {
 
 function App() {
   const [locations, setLocations] = useState<Location[]>([]);
+  const mapRef = useRef<L.Map | null>(null);
 
   const handleLocationDeleted = useCallback((id: number) => {
     setLocations(prev => id ? prev.filter(loc => loc.id !== id) : []);
@@ -43,9 +44,17 @@ function App() {
     setLocations(prev => [...prev, ...newLocations]);
   }, []);
 
+  const handleLocationSelected = useCallback((id: number) => {
+    const location = locations.find(loc => loc.id === id);
+    if (location && mapRef.current) {
+      mapRef.current.setView([location.lat, location.lon], 10);
+    }
+  }, [locations]);
+
   useWebSocket({
     onLocationDeleted: handleLocationDeleted,
-    onLocationsCreated: handleLocationsCreated
+    onLocationsCreated: handleLocationsCreated,
+    onLocationSelected: handleLocationSelected
   });
 
   useEffect(() => {
@@ -57,6 +66,7 @@ function App() {
       center={[0, 0]}
       zoom={3}
       className="map"
+      ref={mapRef}
     >
       <MapClickHandler />
       <TileLayer

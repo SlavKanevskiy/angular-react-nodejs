@@ -26,9 +26,14 @@ export const wsLocationDeleted = createAction(
   props<{ id?: number }>()
 );
 
-// API operations (just trigger HTTP call, result comes via WebSocket)
+// API operations
 export const deleteLocation = createAction(
   '[Locations] Delete Location',
+  props<{ id: number }>()
+);
+
+export const selectLocation = createAction(
+  '[Locations] Select Location',
   props<{ id: number }>()
 );
 

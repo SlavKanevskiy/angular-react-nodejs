@@ -97,6 +97,22 @@ export class LocationsEffects {
     { dispatch: false }
   );
 
+  selectLocation$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(LocationsActions.selectLocation),
+        switchMap(({ id }) =>
+          this.apiService.selectLocation(id).pipe(
+            catchError(error => {
+              console.error('Select location error:', error);
+              return of(null);
+            })
+          )
+        )
+      ),
+    { dispatch: false }
+  );
+
   clearAllLocations$ = createEffect(
     () =>
       this.actions$.pipe(
