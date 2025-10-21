@@ -4,6 +4,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { I18nPluralPipe } from '@angular/common';
 import { CdkVirtualScrollViewport, CdkFixedSizeVirtualScroll, CdkVirtualForOf } from '@angular/cdk/scrolling';
 import { LocationCardComponent } from '../location-card/location-card.component';
 import type { Location } from '../../../../shared/interfaces';
@@ -17,6 +18,7 @@ import * as LocationsSelectors from '../../store/locations/locations.selectors';
     MatButtonModule,
     MatInputModule,
     MatFormFieldModule,
+    I18nPluralPipe,
     CdkVirtualScrollViewport,
     CdkFixedSizeVirtualScroll,
     CdkVirtualForOf,

@@ -15,6 +15,12 @@
       <mat-label>Search</mat-label>
       <input matInput [value]="filterText()" (input)="onFilterChange($any($event.target).value)" placeholder="Name, latitude or longitude...">
     </mat-form-field>
+    <span class="locations-container__count">
+      {{ filteredLocations().length | i18nPlural: {
+        '=1': '1 location',
+        'other': '# locations'
+      } }}
+    </span>
   }
 
   @if (isEmpty()) {
