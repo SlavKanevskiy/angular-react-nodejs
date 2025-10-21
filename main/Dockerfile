@@ -35,9 +35,9 @@ FROM nginx:alpine
 COPY --from=angular-build /app/dist/angular/browser /usr/share/nginx/html/angular/
 COPY --from=react-build /app/dist /usr/share/nginx/html/react/
 
-# Copy shell files
-COPY shell/*.html /usr/share/nginx/html/
-COPY shell/nginx.conf /etc/nginx/conf.d/
+# Copy main files
+COPY main/*.html /usr/share/nginx/html/
+COPY main/nginx.conf /etc/nginx/conf.d/
 
 EXPOSE 8080
 

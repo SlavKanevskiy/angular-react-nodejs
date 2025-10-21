@@ -40,7 +40,7 @@ services:
   shell:
     build:
       context: .
-      dockerfile: shell/Dockerfile
+      dockerfile: main/Dockerfile
     container_name: locations_shell
     restart: always
     ports:
