@@ -1,5 +1,5 @@
-import { apiUrl } from '../../../shared/config'
-import type { Location } from '../../../shared/interfaces'
+import { apiUrl } from '../../../shared/config';
+import type { Location } from '../../../shared/interfaces';
 
 export const apiService = {
   async fetchLocations(): Promise<Location[]> {
@@ -25,4 +25,4 @@ export const apiService = {
     });
     return response.json();
   }
-}
+};

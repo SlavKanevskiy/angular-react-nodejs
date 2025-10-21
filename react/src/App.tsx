@@ -1,22 +1,22 @@
-import { useEffect, useState, useCallback, useRef } from 'react'
-import { MapContainer, Marker, Tooltip, TileLayer, useMapEvents } from 'react-leaflet'
-import MarkerClusterGroup from 'react-leaflet-cluster'
-import type { Location } from '../../shared/interfaces'
-import { useWebSocket } from './hooks/useWebSocket'
-import { apiService } from './services/api.service'
-import L from 'leaflet'
-import 'leaflet/dist/leaflet.css'
-import './App.css'
+import { useEffect, useState, useCallback, useRef } from 'react';
+import { MapContainer, Marker, Tooltip, TileLayer, useMapEvents } from 'react-leaflet';
+import MarkerClusterGroup from 'react-leaflet-cluster';
+import type { Location } from '../../shared/interfaces';
+import { useWebSocket } from './hooks/useWebSocket';
+import { apiService } from './services/api.service';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
+import './App.css';
 
-import markerIcon from 'leaflet/dist/images/marker-icon.png'
-import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png'
-import markerShadow from 'leaflet/dist/images/marker-shadow.png'
+import markerIcon from 'leaflet/dist/images/marker-icon.png';
+import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
+import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: markerIcon2x,
   iconUrl: markerIcon,
   shadowUrl: markerShadow,
-})
+});
 
 function MapClickHandler() {
   useMapEvents({
@@ -93,4 +93,4 @@ function App() {
   );
 }
 
-export default App
+export default App;
