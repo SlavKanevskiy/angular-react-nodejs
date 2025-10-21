@@ -12,7 +12,8 @@ RUN --mount=type=cache,target=/root/.yarn \
 COPY shared/ ../shared/
 COPY angular/ ./
 ENV API_URL=""
-RUN yarn build
+ENV NODE_ENV=production
+RUN yarn build --configuration=production
 
 # Build React
 FROM base AS react-build
@@ -24,6 +25,7 @@ RUN --mount=type=cache,target=/root/.yarn \
 COPY shared/ ../shared/
 COPY react/ ./
 ENV API_URL=""
+ENV NODE_ENV=production
 RUN yarn build
 
 # Final nginx stage

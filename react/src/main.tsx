@@ -1,4 +1,3 @@
-import { StrictMode } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
@@ -11,11 +10,7 @@ class ReactLocationsApp extends HTMLElement {
     this.appendChild(mountPoint)
 
     this.root = createRoot(mountPoint)
-    this.root.render(
-      <StrictMode>
-        <App />
-      </StrictMode>
-    )
+    this.root.render(<App />)
   }
 
   disconnectedCallback() {

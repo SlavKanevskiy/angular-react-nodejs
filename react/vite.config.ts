@@ -9,6 +9,7 @@ export default defineConfig({
   },
   build: {
     outDir: 'dist',
+    minify: 'esbuild',
     rollupOptions: {
       input: 'src/main.tsx',
       output: {
