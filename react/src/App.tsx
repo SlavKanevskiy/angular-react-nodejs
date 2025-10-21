@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react'
-import { MapContainer, Marker, Tooltip, TileLayer } from 'react-leaflet'
+import { MapContainer, Marker, Tooltip, TileLayer, useMapEvents } from 'react-leaflet'
 import MarkerClusterGroup from 'react-leaflet-cluster'
 import type { Location } from '../../shared/interfaces'
 import { useWebSocket } from './hooks/useWebSocket'
@@ -17,6 +17,20 @@ L.Icon.Default.mergeOptions({
   iconUrl: markerIcon,
   shadowUrl: markerShadow,
 })
+
+function MapClickHandler() {
+  useMapEvents({
+    click: (e) => {
+      const { lat, lng } = e.latlng;
+      apiService.createLocation({
+        name: `Click location ${lat.toFixed(0)}, ${lng.toFixed(0)}`,
+        lat: lat,
+        lon: lng
+      });
+    }
+  });
+  return null;
+}
 
 function App() {
   const [locations, setLocations] = useState<Location[]>([]);
@@ -41,11 +55,13 @@ function App() {
   return (
     <MapContainer
       center={[0, 0]}
-      zoom={1}
+      zoom={3}
       className="map"
     >
+      <MapClickHandler />
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        noWrap={true}
       />
       <MarkerClusterGroup>
         {locations.map((location, index) => (
