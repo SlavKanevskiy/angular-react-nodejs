@@ -36,7 +36,7 @@ COPY --from=angular-build /app/dist/angular/browser /usr/share/nginx/html/angula
 COPY --from=react-build /app/dist /usr/share/nginx/html/react/
 
 # Copy shell files
-COPY shell/index.html /usr/share/nginx/html/
+COPY shell/*.html /usr/share/nginx/html/
 COPY shell/nginx.conf /etc/nginx/conf.d/
 
 EXPOSE 8080

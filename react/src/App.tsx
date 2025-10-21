@@ -1,9 +1,9 @@
-import { useEffect, useRef, useState } from 'react'
-import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
+import { useEffect, useState, useCallback } from 'react'
+import { MapContainer, Marker, Tooltip, TileLayer } from 'react-leaflet'
 import MarkerClusterGroup from 'react-leaflet-cluster'
-import { apiUrl } from '../../shared/config'
 import type { Location } from '../../shared/interfaces'
 import { useWebSocket } from './hooks/useWebSocket'
+import { apiService } from './services/api.service'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import './App.css'
@@ -18,29 +18,16 @@ L.Icon.Default.mergeOptions({
   shadowUrl: markerShadow,
 })
 
-const fetchLocations = async () => {
-  const response = await fetch(apiUrl.locations);
-  return response.json();
-};
-
-const deleteLocation = async (id: number) => {
-  const response = await fetch(`${apiUrl.locations}/${id}`, {
-    method: 'DELETE',
-  });
-  return response.json();
-};
-
 function App() {
   const [locations, setLocations] = useState<Location[]>([]);
-  const initialized = useRef(false);
 
-  const handleLocationDeleted = (id: number) => {
+  const handleLocationDeleted = useCallback((id: number) => {
     setLocations(prev => id ? prev.filter(loc => loc.id !== id) : []);
-  };
+  }, []);
 
-  const handleLocationsCreated = (newLocations: Location[]) => {
+  const handleLocationsCreated = useCallback((newLocations: Location[]) => {
     setLocations(prev => [...prev, ...newLocations]);
-  };
+  }, []);
 
   useWebSocket({
     onLocationDeleted: handleLocationDeleted,
@@ -48,35 +35,35 @@ function App() {
   });
 
   useEffect(() => {
-    console.log('useEffect');
-    if (initialized.current) return;
-    initialized.current = true;
-
-    fetchLocations().then(setLocations);
+    apiService.fetchLocations().then(setLocations);
   }, []);
 
   return (
-    <div className="map-container">
-      <MapContainer
-        center={[0, 0]}
-        zoom={1}
-        className="map"
-      >
-        <TileLayer
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-        <MarkerClusterGroup>
-          {locations.map((location, index) => (
-            <Marker key={index} position={[location.lat, location.lon]}>
-              <Popup>
-                <div>{location.name}</div>
-                <button onClick={() => deleteLocation(location.id)}>delete</button>
-              </Popup>
-            </Marker>
-          ))}
-        </MarkerClusterGroup>
-      </MapContainer>
-    </div>
+    <MapContainer
+      center={[0, 0]}
+      zoom={1}
+      className="map"
+    >
+      <TileLayer
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      />
+      <MarkerClusterGroup>
+        {locations.map((location, index) => (
+          <Marker
+            key={index}
+            position={[location.lat, location.lon]}
+            eventHandlers={{
+              click: () => apiService.deleteLocation(location.id)
+            }}
+          >
+            <Tooltip>
+              <div>{location.name}</div>
+              <div>Click to delete</div>
+            </Tooltip>
+          </Marker>
+        ))}
+      </MarkerClusterGroup>
+    </MapContainer>
   );
 }
 

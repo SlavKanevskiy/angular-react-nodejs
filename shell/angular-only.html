@@ -21,55 +21,25 @@
       margin: 0;
       padding: 0;
       display: flex;
-    }
-
-    .app-wrapper {
-      position: relative;
-    }
-
-    react-locations-app {
-      display: block;
-      height: 100%;
-      position: relative;
-      z-index: 0;
-    }
-
-    .app-link {
-      position: absolute;
-      z-index: 1;
-      left: 50px;
+      justify-content: center;
     }
 
     .app-wrapper.angular {
-      width: 500px;
+      width: 600px;
       height: 100vh;
     }
 
-    .app-wrapper.react {
-      flex: 1;
-      height: 100vh;
-    }
   </style>
 </head>
 <body>
   <script>window.API_URL = '';</script>
 
   <div class="app-wrapper angular">
-    <a class="app-link"href="/angular-only.html" target="_blank">Open only Angular</a>
     <angular-locations-table></angular-locations-table>
-  </div>
-
-  <div class="app-wrapper react">
-    <a class="app-link" href="/react-only.html" target="_blank">Open only React</a>
-    <react-locations-app></react-locations-app>
   </div>
 
   <!-- Load Angular Web Component -->
   <script type="module" src="/angular/main.js"></script>
   <link rel="stylesheet" href="/angular/styles.css">
-
-  <!-- Load React Web Component -->
-  <script type="module" src="/react/react-app.js"></script>
-  <link rel="stylesheet" href="/react/react-app.css">
 </body>
 </html>
