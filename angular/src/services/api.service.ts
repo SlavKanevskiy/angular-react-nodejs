@@ -35,8 +35,5 @@ export class ApiService {
     return this.http.delete<{ message: string; count: number }>(apiUrl.locations);
   }
 
-  selectLocation(id: number): Observable<{ message: string }> {
-    return this.http.post<{ message: string }>(`${apiUrl.locations}/select`, { id });
-  }
 }
 

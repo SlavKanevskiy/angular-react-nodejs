@@ -7,14 +7,13 @@ import type { Location } from '../../../shared/interfaces';
 interface UseWebSocketProps {
   onLocationDeleted: (id: number) => void;
   onLocationsCreated: (locations: Location[]) => void;
-  onLocationSelected: (id: number) => void;
 }
 
-export const useWebSocket = ({ onLocationDeleted, onLocationsCreated, onLocationSelected }: UseWebSocketProps) => {
+export const useWebSocket = ({ onLocationDeleted, onLocationsCreated }: UseWebSocketProps) => {
   const socketRef = useRef<ReturnType<typeof io> | null>(null);
-  const callbacksRef = useRef({ onLocationDeleted, onLocationsCreated, onLocationSelected });
+  const callbacksRef = useRef({ onLocationDeleted, onLocationsCreated });
 
-  callbacksRef.current = { onLocationDeleted, onLocationsCreated, onLocationSelected };
+  callbacksRef.current = { onLocationDeleted, onLocationsCreated };
 
   useEffect(() => {
     socketRef.current = io(wsUrl);
@@ -39,11 +38,6 @@ export const useWebSocket = ({ onLocationDeleted, onLocationsCreated, onLocation
     socketRef.current.on(WS_EVENTS.LOCATIONS_CREATED, (data: Location[]) => {
       console.log('React', WS_EVENTS.LOCATIONS_CREATED);
       callbacksRef.current.onLocationsCreated(data);
-    });
-
-    socketRef.current.on(WS_EVENTS.LOCATION_SELECTED, (data: { id: number }) => {
-      console.log('React', WS_EVENTS.LOCATION_SELECTED);
-      callbacksRef.current.onLocationSelected(data.id);
     });
 
     return () => {

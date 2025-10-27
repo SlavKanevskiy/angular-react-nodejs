@@ -32,10 +32,6 @@ export const deleteLocation = createAction(
   props<{ id: number }>()
 );
 
-export const selectLocation = createAction(
-  '[Locations] Select Location',
-  props<{ id: number }>()
-);
 
 export const generateLocations = createAction(
   '[Locations] Generate Locations',

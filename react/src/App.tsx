@@ -3,6 +3,7 @@ import { MapContainer, Marker, Tooltip, TileLayer, useMapEvents } from 'react-le
 import MarkerClusterGroup from 'react-leaflet-cluster';
 import type { Location } from '../../shared/interfaces';
 import { useWebSocket } from './hooks/useWebSocket';
+import { useBroadcastChannel } from './hooks/useBroadcastChannel';
 import { apiService } from './services/api.service';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -53,7 +54,10 @@ function App() {
 
   useWebSocket({
     onLocationDeleted: handleLocationDeleted,
-    onLocationsCreated: handleLocationsCreated,
+    onLocationsCreated: handleLocationsCreated
+  });
+
+  useBroadcastChannel({
     onLocationSelected: handleLocationSelected
   });
 

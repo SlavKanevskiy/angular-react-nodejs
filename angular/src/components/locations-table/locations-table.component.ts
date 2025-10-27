@@ -10,6 +10,7 @@ import { LocationCardComponent } from '../location-card/location-card.component'
 import type { Location } from '../../../../shared/interfaces';
 import * as LocationsActions from '../../store/locations/locations.actions';
 import * as LocationsSelectors from '../../store/locations/locations.selectors';
+import { BroadcastService } from '../../services/broadcast.service';
 
 @Component({
   selector: 'app-locations-table',
@@ -30,6 +31,7 @@ import * as LocationsSelectors from '../../store/locations/locations.selectors';
 })
 export class LocationsTableComponent implements OnInit {
   private store = inject(Store);
+  private broadcastService = inject(BroadcastService);
 
   filteredLocations = this.store.selectSignal(LocationsSelectors.selectFilteredLocations);
   loading = this.store.selectSignal(LocationsSelectors.selectLoading);
@@ -47,7 +49,7 @@ export class LocationsTableComponent implements OnInit {
   }
 
   onCardClick(location: Location): void {
-    this.store.dispatch(LocationsActions.selectLocation({ id: location.id }));
+    this.broadcastService.sendLocationSelected(location.id);
   }
 
   onDeleteLocation(id: number): void {
