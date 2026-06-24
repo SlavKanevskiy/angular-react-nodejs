@@ -38,7 +38,7 @@ Open http://localhost:8080 to see both applications running side-by-side.
          └─────────────────────────┘
                      │
          ┌────────────────────────┐
-         │    Node.js Backend     │
+         │    NestJS Backend      │
          │  ┌─────────────────┐   │
          │  │ REST API        │   │
          │  │ /api/locations  │   │
@@ -100,9 +100,28 @@ Open http://localhost:8080 to see both applications running side-by-side.
 
 ## Technology Stack
 
-- Angular 20 with NGRX
+- Angular 20 with NgRx
 - React 19 with Leaflet maps
-- Node.js with Express and Socket.IO
+- NestJS 11 with Socket.IO (WebSocket Gateway)
 - PostgreSQL via Prisma ORM
 - Docker Compose for orchestration
 - Nginx for serving and proxying
+
+
+### API Endpoints
+
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | `/api/locations` | All locations (ordered by id) |
+| GET | `/api/locations/:id` | Single location |
+| POST | `/api/locations` | Create `{ name, lat, lon }` |
+| POST | `/api/locations/generate` | Bulk generate `{ n }` (1–10000) |
+| DELETE | `/api/locations` | Delete all |
+| DELETE | `/api/locations/:id` | Delete by id |
+
+### WebSocket Events (Socket.IO)
+
+| Event | Payload | Trigger |
+|-------|---------|---------|
+| `locations:created` | `Location[]` | POST create / generate |
+| `location:deleted` | `{}` or `{ id }` | DELETE all / by id |

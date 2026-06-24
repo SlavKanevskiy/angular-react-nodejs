@@ -63,4 +63,8 @@ export class LocationsTableComponent implements OnInit {
   clearAll(): void {
     this.store.dispatch(LocationsActions.clearAllLocations());
   }
+
+  trackById(_index: number, location: Location): number {
+    return location.id;
+  }
 }

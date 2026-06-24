@@ -30,7 +30,7 @@
   @if (hasLocations()) {
     <cdk-virtual-scroll-viewport itemSize="50" class="locations-list">
       <app-location-card
-        *cdkVirtualFor="let location of filteredLocations()"
+        *cdkVirtualFor="let location of filteredLocations(); trackBy: trackById"
         [location]="location"
         [height]="50"
         (cardClick)="onCardClick($event)"

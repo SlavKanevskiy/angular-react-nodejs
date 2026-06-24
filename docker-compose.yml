@@ -11,7 +11,7 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./nodejs/database/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./nest/database/init.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
@@ -20,7 +20,7 @@ services:
 
   backend:
     build:
-      context: ./nodejs
+      context: ./nest
       dockerfile: Dockerfile
     container_name: locations_backend
     restart: always
@@ -30,12 +30,12 @@ services:
       - NODE_ENV=development
       - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/locations_db
     volumes:
-      - ./nodejs/src:/app/src
-      - ./shared:/app/../shared
+      - ./nest/src:/app/src
+      - ./shared:/shared
     depends_on:
       postgres:
         condition: service_healthy
-    command: yarn dev
+    command: yarn start:dev
 
   shell:
     build:
